@@ -1,0 +1,32 @@
+1.openjdk
+配置环境变量/etc/profile
+2.tomcat core
+tomcat 9 with core
+
+3.jenkins.war
+放在tomcat/webapps/, java generic package
+start tomcat http://hostname:8080/jenkins
+Unlock Jenkins /root/.jenkins/secrets/initialAdminPassword
+4.mavan
+wget apache maven
+export M2_HOME
+export CLASSPATH
+export PATH
+配置环境变量/etc/profile
+阿里云maven mirror 放在在mavenconf的settting.xml文件
+<mirrorOf>*</mirrorOf>
+5.git
+
+
+
+jenkins 插件安装：
+1.ssh
+2.publish over ssh
+3.git parameter
+4.Maven Integeration plugin
+5.git
+jenkins 配置
+插件管理-avaliable-maven integration
+系统管理-全局工具配置-jdk git maven
+
+

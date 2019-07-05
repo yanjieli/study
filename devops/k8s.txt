@@ -1,0 +1,48 @@
+master 上安装四步
+step1:
+yum install kubelet kubectl kubeadmin
+yum install docker
+step2:
+swapoff -a
+step3:
+master上执行如下
+kubeadm init --pod-network-cidr=10.244.0.0./16 --ignore-preflight-errors=NumCPU
+失败的镜像单独拿出来，去keveon mirrorgooglecontainers下载，完毕后手工设置tag docker tag
+比如如下的镜像失败：
+
+docker pull mirrorgooglecontainers/kube-apiserver:v1.13.2
+docker tag mirrorgooglecontainers/kube-apiserver:v1.13.2 k8s.gcr.io/kube-apiserver:v1.13.2
+docker rmi mirrorgooglecontainers/kube-apiserver:v1.13.2
+
+docker pull mirrorgooglecontainers/kube-controller-manager:v1.13.2
+docker pull mirrorgooglecontainers/kube-scheduler:v1.13.2
+docker pull mirrorgooglecontainers/kube-proxy:v1.13.2
+docker pull mirrorgooglecontainers/pause:3.1
+docker pull mirrorgooglecontainers/etcd:3.2.24
+docker pull keveon/coredns:1.2.6
+（kubeadm join命令，记录下来后去别的cluster机器上执行）
+step4:master上执行
+1.mkdir -p $HOME/.kube
+2.cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+3.chown $(id -u):$(id -g) $HOME/.kube/config
+4.添加flannel网络配置
+添加Node，只在node上执行
+1.将之前记录下来的kubeadm join 命令执行
+2.swapoff -a
+3.sysctl net.bridge.bridge-nf-call-iptables=1
+
+kubectl get node
+kubectl get pod --all-namespaces -o wide
+
+
+k8s安装异常处理
+node上：kubeadm reset 断开node，重新join
+mater上：kubeadm reset 重新init
+重启动后，需要执行如下命令：
+1.swapoff -a
+2.systemctl daemon-reload
+3.systemctl restart kubelet
+
+
+
+
